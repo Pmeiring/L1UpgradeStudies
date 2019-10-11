@@ -74,8 +74,10 @@ tar xzf fastjet-3.3.2.tar.gz
 cd fastjet-3.3.2
 ./configure --prefix=/yourpath/FASTJET
 make install
+```
+Make sure the path to fastjet-config is in the PATH variable:
 
-Then in .bash_profile or some source file put:
+```
 export PATH=${PATH}:/yourpath/FASTJET/bin/ 
 ```
 
