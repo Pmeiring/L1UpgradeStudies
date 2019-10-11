@@ -48,7 +48,11 @@ git cms-init
 ```
 git clone https://github.com/FHead/L1UpgradeStudies.git
 ```
-3. Make sure you have `root` and `fastjet` in PATH
+3. Make sure you have `root` and `fastjet` in PATH. One can also check with:
+```
+root-config --version
+fastjet-config --version
+```
 4. do `make` to compile everything
 ```
 cd L1UpgradeStudies
@@ -60,12 +64,10 @@ Take a look at the makefile for the TestRun for an example on how to run everyth
 
 
 
-### Side note: if you don't see fastjet
+### How to install FastJet
 
-This can be done for example to have a quick fastjet installation
-```
 Get download link to the latest FastJet version from http://www.fastjet.fr/  
-
+```
 mkdir FASTJET
 wget http://www.fastjet.fr/repo/fastjet-3.3.2.tar.gz
 tar xzf fastjet-3.3.2.tar.gz
@@ -76,8 +78,6 @@ make install
 Then in .bash_profile or some source file put:
 export PATH=${PATH}:/yourpath/FASTJET/bin/ 
 ```
-
-You can test if the setup is correct by running `fastjet-config` and see if you get anything.
 
 
 ## More information on the binaries
