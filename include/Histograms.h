@@ -19,6 +19,8 @@ public:
    vector<double> Thresholds;
    vector<TH1D *> HPT;
    vector<TH1D *> HPTEta15;
+   vector<TH1D *> HPTEta0to1p479;
+   vector<TH1D *> HPTEta1p479to2p8;
    vector<TH1D *> HPTEtaLarge;
    vector<TH1D *> HResponse;
    vector<TH1D *> HResponseEta15;
@@ -41,6 +43,10 @@ public:
    vector<TH1D *> HEtaPT30;
    vector<TH1D *> HEtaPT100;
    vector<TH1D *> HEtaPT200;
+   vector<TH1D *> HEtaPT5to10;
+   vector<TH1D *> HEtaPT10to20;
+   vector<TH1D *> HEtaPT20to30;
+   vector<TH1D *> HEtaPT30to40;
    vector<TH1D *> HEtaDXY20;
    vector<TH1D *> HEtaDXY50;
    vector<TH1D *> HEtaDXY80;

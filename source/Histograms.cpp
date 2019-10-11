@@ -30,6 +30,8 @@ Histograms::Histograms(int ptbin, double ptmin, double ptmax,
 
       HPT.push_back(                  New(Label, "PT",                   Cut, ";PT;#",  ptbin,  ptmin,  ptmax));
       HPTEta15.push_back(             New(Label, "PTEta15",              Cut, ";PT;#",  ptbin,  ptmin,  ptmax));
+      HPTEta0to1p479.push_back(       New(Label, "PTEta0to1p479",        Cut, ";PT;#",  ptbin,  ptmin,  ptmax));
+      HPTEta1p479to2p8.push_back(     New(Label, "PTEta1p479to2p8",      Cut, ";PT;#",  ptbin,  ptmin,  ptmax));
       HPTEtaLarge.push_back(          New(Label, "PTEtaLarge",           Cut, ";PT;#",  ptbin,  ptmin,  ptmax));
       HResponse.push_back(            New(Label, "Response",             Cut, ";R;#",   rbin,   rmin,   rmax));
       HResponseEta15.push_back(       New(Label, "ResponseEta15",        Cut, ";R;#",   rbin,   rmin,   rmax));
@@ -52,6 +54,10 @@ Histograms::Histograms(int ptbin, double ptmin, double ptmax,
       HEtaPT30.push_back(             New(Label, "EtaPT30",              Cut, ";Eta;#", Etabin, Etamin, Etamax));
       HEtaPT100.push_back(            New(Label, "EtaPT100",             Cut, ";Eta;#", Etabin, Etamin, Etamax));
       HEtaPT200.push_back(            New(Label, "EtaPT200",             Cut, ";Eta;#", Etabin, Etamin, Etamax));
+      HEtaPT5to10.push_back(          New(Label, "EtaPT5to10",           Cut, ";Eta;#", Etabin, Etamin, Etamax));
+      HEtaPT10to20.push_back(         New(Label, "EtaPT10to20",          Cut, ";Eta;#", Etabin, Etamin, Etamax));
+      HEtaPT20to30.push_back(         New(Label, "EtaPT20to30",          Cut, ";Eta;#", Etabin, Etamin, Etamax));
+      HEtaPT30to40.push_back(         New(Label, "EtaPT30to40",          Cut, ";Eta;#", Etabin, Etamin, Etamax));
       HEtaDXY20.push_back(            New(Label, "EtaDXY20",             Cut, ";Eta;#", Etabin, Etamin, Etamax));
       HEtaDXY50.push_back(            New(Label, "EtaDXY50",             Cut, ";Eta;#", Etabin, Etamin, Etamax));
       HEtaDXY80.push_back(            New(Label, "EtaDXY80",             Cut, ";Eta;#", Etabin, Etamin, Etamax));
@@ -81,6 +87,8 @@ Histograms::Histograms(int ptbin, double ptmin, double ptmax,
 
       HPT[iT]                  ->Sumw2();
       HPTEta15[iT]             ->Sumw2();
+      HPTEta0to1p479[iT]       ->Sumw2();
+      HPTEta1p479to2p8[iT]     ->Sumw2();
       HPTEtaLarge[iT]          ->Sumw2();
       HResponse[iT]            ->Sumw2();
       HResponseEta15[iT]       ->Sumw2();
@@ -103,6 +111,10 @@ Histograms::Histograms(int ptbin, double ptmin, double ptmax,
       HEtaPT30[iT]             ->Sumw2();
       HEtaPT100[iT]            ->Sumw2();
       HEtaPT200[iT]            ->Sumw2();
+      HEtaPT5to10[iT]          ->Sumw2();
+      HEtaPT10to20[iT]         ->Sumw2();
+      HEtaPT20to30[iT]         ->Sumw2();
+      HEtaPT30to40[iT]         ->Sumw2();
       HEtaDXY20[iT]            ->Sumw2();
       HEtaDXY50[iT]            ->Sumw2();
       HEtaDXY80[iT]            ->Sumw2();
@@ -150,6 +162,8 @@ void Histograms::Fill(double check, double pt, double eta, double iso, double dr
 
       if(HPT[i] != NULL)                                             HPT[i]->Fill(pt);
       if(HPTEta15[i] != NULL && Region == 0)                         HPTEta15[i]->Fill(pt);
+      if(HPTEta0to1p479[i] != NULL && eta < 1.479 && eta > 0)        HPTEta0to1p479[i]->Fill(pt);
+      if(HPTEta1p479to2p8[i] != NULL && eta < 2.8 && eta > 1.479)    HPTEta1p479to2p8[i]->Fill(pt);
       if(HPTEtaLarge[i] != NULL && Region == 1)                      HPTEtaLarge[i]->Fill(pt);
       if(HResponse[i] != NULL)                                       HResponse[i]->Fill(check / pt);
       if(HResponseEta15[i] != NULL && Region == 0)                   HResponseEta15[i]->Fill(check / pt);
@@ -172,6 +186,10 @@ void Histograms::Fill(double check, double pt, double eta, double iso, double dr
       if(HEtaPT30[i] != NULL && pt > 30)                             HEtaPT30[i]->Fill(eta);
       if(HEtaPT100[i] != NULL && pt > 100)                           HEtaPT100[i]->Fill(eta);
       if(HEtaPT200[i] != NULL && pt > 200)                           HEtaPT200[i]->Fill(eta);
+      if(HEtaPT5to10[i] != NULL && pt > 5 && pt < 10)                HEtaPT5to10[i]->Fill(eta);
+      if(HEtaPT10to20[i] != NULL && pt > 10 && pt < 20)              HEtaPT10to20[i]->Fill(eta);
+      if(HEtaPT20to30[i] != NULL && pt > 20 && pt < 30)              HEtaPT20to30[i]->Fill(eta);
+      if(HEtaPT30to40[i] != NULL && pt > 30 && pt < 40)              HEtaPT30to40[i]->Fill(eta);
       if(HEtaDXY20[i] != NULL && dxy > 20)                           HEtaDXY20[i]->Fill(eta);
       if(HEtaDXY50[i] != NULL && dxy > 50)                           HEtaDXY50[i]->Fill(eta);
       if(HEtaDXY80[i] != NULL && dxy > 80)                           HEtaDXY80[i]->Fill(eta);
@@ -216,6 +234,8 @@ void Histograms::Write(TDirectory *Directory)
 
    Write(HPT,                   Directory);
    Write(HPTEta15,              Directory);
+   Write(HPTEta0to1p479,        Directory);
+   Write(HPTEta1p479to2p8,      Directory);
    Write(HPTEtaLarge,           Directory);
    Write(HResponse,             Directory);
    Write(HResponseEta15,        Directory);
@@ -238,6 +258,10 @@ void Histograms::Write(TDirectory *Directory)
    Write(HEtaPT30,              Directory);
    Write(HEtaPT100,             Directory);
    Write(HEtaPT200,             Directory);
+   Write(HEtaPT5to10,           Directory);
+   Write(HEtaPT10to20,          Directory);
+   Write(HEtaPT20to30,          Directory);
+   Write(HEtaPT30to40,          Directory);
    Write(HEtaDXY20,             Directory);
    Write(HEtaDXY50,             Directory);
    Write(HEtaDXY80,             Directory);

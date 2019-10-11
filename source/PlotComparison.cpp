@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
    int ReBin                   = CL.GetInt("rebin", 1);
 
    int N = FileNames.size();
+   std::cout<<"numberof filenames = "<<N<<std::endl;
 
    Assert(N == Labels.size(),       "Number of files != number of labels");
    Assert(N == Numerators.size(),   "Number of files != number of numberators");

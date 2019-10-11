@@ -181,10 +181,12 @@ int main(int argc, char *argv[])
       ObjectHistograms.push_back(H);
    }
 
+   int counter=1;
    for(string InputFileName : InputFileNames)
    {
-      cout << "Processing file " << InputFileName << endl;
-
+      cout << "Processing file "<<counter<<": " << InputFileName << endl;
+      counter++;
+      
       // Input File
       TFile File(InputFileName.c_str());
 
@@ -197,6 +199,8 @@ int main(int argc, char *argv[])
 
       // Loop over events
       int EntryCount = MGen.Tree->GetEntries();
+      std::cout<<"There are "<<EntryCount<<" entries in this file..."<<std::endl;
+
       ProgressBar Bar(cout, EntryCount);
 
       for(int iE = 0; iE < EntryCount; iE++)
@@ -612,11 +616,16 @@ int main(int argc, char *argv[])
    }
 
    // Write result to file
+   std::cout<<"Writing result to file"<<std::endl;   
    for(int i = 0; i < N; i++)
       ObjectHistograms[i]->Write(Directories[i]);
 
    // Clean up
-   OutputFile.Close();
+   std::cout<<"Closing..."<<std::endl;
+   // OutputFile.Close();                 // <- Takes a long time!
+
+   gROOT->GetListOfFiles()->RemoveAt(0);  // <- Could lead to memory leak!
+   std::cout<<"All done"<<std::endl;
 
    // Yay
    return 0;

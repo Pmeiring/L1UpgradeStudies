@@ -1998,8 +1998,8 @@ namespace {
 0
     };
     static const char* includePaths[] = {
-"/cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-dlmfga/include",
-"/afs/cern.ch/work/c/chenyi/L1UpgradeStudies/",
+"/cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.14.09-pafccj/include",
+"/afs/cern.ch/work/p/pmeiring/private/CMS/CMSSW_10_6_0/src/L1UpgradeStudies/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(
@@ -2068,7 +2068,7 @@ nullptr};
     if (!isInitialized) {
       TROOT::RegisterModule("L1Classes",
         headers, includePaths, payloadCode, fwdDeclCode,
-        TriggerDictionaryInitialization_L1Classes_Impl, {}, classesHeaders);
+        TriggerDictionaryInitialization_L1Classes_Impl, {}, classesHeaders, /*has no C++ module*/false);
       isInitialized = true;
     }
   }
