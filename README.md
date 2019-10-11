@@ -46,12 +46,12 @@ git cms-init
 
 2. Clone this repository (no restrictions on where)
 ```
-git clone https://github.com/FHead/L1UpgradeStudies.git AwesomeCode
+git clone https://github.com/FHead/L1UpgradeStudies.git
 ```
 3. Make sure you have `root` and `fastjet` in PATH
 4. do `make` to compile everything
 ```
-cd AwesomeCode
+cd L1UpgradeStudies
 make
 ```
 5. test run by typing `make TestRun`
