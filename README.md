@@ -64,17 +64,17 @@ Take a look at the makefile for the TestRun for an example on how to run everyth
 
 This can be done for example to have a quick fastjet installation
 ```
-mkdir -p fastjet/tarfiles
-cd fastjet/tarfiles
-curl -O http://fastjet.fr/repo/fastjet-3.3.2.tar.gz 
-tar xvfz fastjet-3.3.2.tar.gz 
-mv fastjet-3.3.2 ../3.3.2
-cd ../3.3.2/
-./configure --prefix=$PWD/../
-make -j 10
+Get download link to the latest FastJet version from http://www.fastjet.fr/  
+
+mkdir FASTJET
+wget http://www.fastjet.fr/repo/fastjet-3.3.2.tar.gz
+tar xzf fastjet-3.3.2.tar.gz
+cd fastjet-3.3.2
+./configure --prefix=/yourpath/FASTJET
 make install
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<your path>/fastjet/lib
-export PATH=${PATH}:<your path>/fastjet/bin/
+
+Then in .bash_profile or some source file put:
+export PATH=${PATH}:/yourpath/FASTJET/bin/ 
 ```
 
 You can test if the setup is correct by running `fastjet-config` and see if you get anything.
