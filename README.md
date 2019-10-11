@@ -36,13 +36,13 @@ Note:
 
 ## Setup (on lxplus)
 
-1. Setup a recent CMSSW environment. For example if you want to use CMSSW_10_4_0:
+1. Setup a recent CMSSW environment. The code is not bound to any specific CMSSW version. For example if you want to use CMSSW_10_6_0:
 ```
-cmsrel CMSSW_10_4_0
-cd CMSSW_10_4_0/src
+cmsrel CMSSW_10_6_0
+cd CMSSW_10_6_0/src
 cmsenv
+git cms-init
 ```
-The code is not tied with any specific CMSSW version
 
 2. Clone this repository (no restrictions on where)
 ```
