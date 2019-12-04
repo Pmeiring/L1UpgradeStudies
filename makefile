@@ -90,51 +90,57 @@ TestRunPart2: binary/PlotComparison binary/MakeScalingPlot binary/ExportTextFile
 
 
 DYLL_V7p5p2 = /eos/cms/store/cmst3/group/l1tr/cepeda/triggerntuples10X/DYToLL_M-50_14TeV_TuneCP5_pythia8/crab_DYLL_200PU_V7_5_2/190324_103140/0000//
+DYLL_V10    = /eos/cms/store/group/cmst3/group/l1tr/cepeda/triggerntuplesTDR/DYToLL_V10_1/NTP/v1/
+PrivateSample    = /afs/cern.ch/work/p/pmeiring/private/CMS/CMSSW_10_6_1_patch2/src/L1Trigger/L1TCommon/test/PrivateSamples/
+
+OutputHists = output/DYLL_V7p5p2_DR1_191204.root
+OutputEOS = /eos/user/p/pmeiring/www/L1Trigger/DYLL_V7p5p2_DR1_191204
+
 myfillhistograms: binary/FillHistograms
 	mkdir -p output
-	binary/FillHistograms --input `ls $(DYLL_V7p5p2)/* | head -n 10 | tr '\n' ',' | sed "s/,$$//g"` \
-		--output output/MyTestOutput.root --StoredGen true --config config/mycustom.config
+	binary/FillHistograms --input `ls $(DYLL_V7p5p2)/* | tr '\n' ',' | sed "s/,$$//g"` \
+		--output $(OutputHists) --StoredGen true --config config/mycustom.config
 	
 MatchingEff_EG_TkE_PT: binary/PlotComparison
-	mkdir -p pdf
+	mkdir -p png
 	binary/PlotComparison \
 		--label "EGElectron (V7.5.2)","TkElectron (V7.5.2)" \
-		--file output/MyTestOutput.root,output/MyTestOutput.root \
+		--file $(OutputHists),$(OutputHists) \
 		--numerator "EGTrackID_PT_000000","TkElectronTrackID_PT_000000" \
 		--denominator "auto","auto" \
-		--title ";p_{T};Efficiency" --xmin 0 --xmax 40 --output pdf/MatchingEff_EG_TkE_PT.pdf \
+		--title ";p_{T};Efficiency" --xmin 0 --xmax 40 --output $(OutputEOS)/MatchingEff_EG_TkE_PT.png \
 		--legendx 0.45 --legendy 0.20 \
 		--rebin 10
 
 MatchingEff_EG_Eta_PTbinned: binary/PlotComparison
-	mkdir -p pdf
+	mkdir -p png
 	binary/PlotComparison \
 		--label "5 < pT < 10","10 < pT < 20","20 < pT < 30","30 < pT < 40" \
-		--file output/MyTestOutput.root,output/MyTestOutput.root,output/MyTestOutput.root,output/MyTestOutput.root \
+		--file $(OutputHists),$(OutputHists),$(OutputHists),$(OutputHists) \
 		--numerator "EGTrackID_EtaPT5to10_000000","EGTrackID_EtaPT10to20_000000","EGTrackID_EtaPT20to30_000000","EGTrackID_EtaPT30to40_000000" \
 		--denominator "auto","auto","auto","auto" \
-		--title "EGElectron (V7.5.2);#eta;Efficiency" --xmin -3 --xmax 3 --output pdf/MatchingEff_EG_Eta_PTbinned.pdf \
+		--title "EGElectron (V7.5.2);#eta;Efficiency" --xmin -3 --xmax 3 --output $(OutputEOS)/MatchingEff_EG_Eta_PTbinned.png \
 		--legendx 0.45 --legendy 0.20 \
 		--rebin 10
 
 MatchingEff_TkE_Eta_PTbinned: binary/PlotComparison
-	mkdir -p pdf
+	mkdir -p png
 	binary/PlotComparison \
 		--label "5 < pT < 10","10 < pT < 20","20 < pT < 30","30 < pT < 40" \
-		--file output/MyTestOutput.root,output/MyTestOutput.root,output/MyTestOutput.root,output/MyTestOutput.root \
+		--file $(OutputHists),$(OutputHists),$(OutputHists),$(OutputHists) \
 		--numerator "TkElectronTrackID_EtaPT5to10_000000","TkElectronTrackID_EtaPT10to20_000000","TkElectronTrackID_EtaPT20to30_000000","TkElectronTrackID_EtaPT30to40_000000" \
 		--denominator "auto","auto","auto","auto" \
-		--title "TkElectron (V7.5.2);#eta;Efficiency" --xmin -3 --xmax 3 --output pdf/MatchingEff_TkE_Eta_PTbinned.pdf \
+		--title "TkElectron (V7.5.2);#eta;Efficiency" --xmin -3 --xmax 3 --output $(OutputEOS)/MatchingEff_TkE_Eta_PTbinned.png \
 		--legendx 0.45 --legendy 0.20 \
 		--rebin 10
 
 MatchingEff_EG_TkE_PT_Etabinned: binary/PlotComparison
-	mkdir -p pdf
+	mkdir -p png
 	binary/PlotComparison \
-		--label "EGElectron | 0 < eta < 1.479","EGElectron | 1.479 < eta < 2.8","TkElectron | 0 < eta < 1.479","TkElectron | 1.479 < eta < 2.8" \
-		--file output/MyTestOutput.root,output/MyTestOutput.root,output/MyTestOutput.root,output/MyTestOutput.root \
+		--label "EGElectron | 0 < \#eta < 1.479","EGElectron | 1.479 < \#eta < 2.8","TkElectron | 0 < \#eta < 1.479","TkElectron | 1.479 < \#eta < 2.8" \
+		--file $(OutputHists),$(OutputHists),$(OutputHists),$(OutputHists) \
 		--numerator "EGTrackID_PTEta0to1p479_000000","EGTrackID_PTEta1p479to2p8_000000","TkElectronTrackID_PTEta0to1p479_000000","TkElectronTrackID_PTEta1p479to2p8_000000" \
 		--denominator "auto","auto","auto","auto" \
-		--title ";p_{T};Efficiency" --xmin 0 --xmax 40 --output pdf/MatchingEff_EG_TkE_PT_Etabinned.pdf \
+		--title ";p_{T};Efficiency" --xmin 0 --xmax 40 --output $(OutputEOS)/MatchingEff_EG_TkE_PT_Etabinned.png \
 		--legendx 0.45 --legendy 0.20 \
 		--rebin 10

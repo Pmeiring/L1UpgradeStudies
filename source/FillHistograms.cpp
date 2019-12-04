@@ -122,7 +122,8 @@ public:
 
 int main(int argc, char *argv[])
 {
-   fastjet::ClusterSequence::set_fastjet_banner_stream(NULL);
+   // Prevent FastJet banner from printing
+   fastjet::ClusterSequence::set_fastjet_banner_stream(NULL);  
 
    CommandLine CL(argc, argv);
 
@@ -137,6 +138,7 @@ int main(int argc, char *argv[])
    bool LDROnly                  = CL.GetBool("LDROnly", false);
    bool RejectLeptonicW          = CL.GetBool("RejectLeptonicW", false);
 
+   // Put the content of the main config file (use to create and fill the histograms) in a vector
    vector<Configuration> Configurations = ReadConfigFile(ConfigFileName);
    int N = Configurations.size();
 
@@ -156,11 +158,12 @@ int main(int argc, char *argv[])
    // Output File and directories for better organization
    TFile OutputFile(OutputFileName.c_str(), "RECREATE");
 
+   // Create directories in the output file
    vector<TDirectory *> Directories;
    for(int i = 0; i < N; i++)
       Directories.push_back(OutputFile.mkdir(Configurations[i].Directory.c_str(), ""));
 
-   // Create histograms
+   // Define L1-object pT thresholds
    vector<double> GenThresholds = {0};
    vector<double> JetThresholds = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60,
       75, 80, 85, 90, 100, 120, 125, 150, 175, 200, 225, 250, 275, 300};
@@ -170,6 +173,7 @@ int main(int argc, char *argv[])
    vector<double> HTThresholds = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150,
       175, 200, 225, 250, 300, 325, 350, 375, 400, 425, 450, 475, 500};
    
+   // Loop over all configurations and create histograms based on the configuration and L1-object pT thresholds   
    vector<Histograms *> ObjectHistograms;
    for(int i = 0; i < N; i++)
    {
@@ -196,11 +200,12 @@ int main(int argc, char *argv[])
       ObjectHistograms.push_back(H);
    }
 
-   int counter=1;
+   int FileCounter=1;
    for(string InputFileName : InputFileNames)
    {
-      cout << "Processing file "<<counter<<": " << InputFileName << endl;
-      counter++;
+      // Print some user feedback
+      cout << "Processing file "<<FileCounter << "/" <<InputFileNames.size() <<" : " << InputFileName << endl;
+      FileCounter++;
       
       // Input File
       TFile File(InputFileName.c_str());
@@ -212,12 +217,12 @@ int main(int argc, char *argv[])
       if(MGen.Tree == nullptr || MPhaseII.Tree == nullptr)
          continue;
 
-      // Loop over events
+      // Print/prepare some user feedback
       int EntryCount = MGen.Tree->GetEntries();
       std::cout<<"There are "<<EntryCount<<" entries in this file..."<<std::endl;
-
       ProgressBar Bar(cout, EntryCount);
 
+      // Loop over events
       for(int iE = 0; iE < EntryCount; iE++)
       {
          Bar.Update(iE);
@@ -243,7 +248,7 @@ int main(int argc, char *argv[])
          vector<FourVector> ChargedParticles;
          vector<FourVector> Particles;
 
-         // Collect gen-particles
+         // Collect gen-particles based on Generator IDs, status and charge
          for(int i = 0; i < (int)MGen.GenP.size(); i++)
          {
             int AbsID = MGen.GenID[i];
@@ -287,7 +292,7 @@ int main(int argc, char *argv[])
          }
 
          // Cluster jets
-         vector<FourVector> GenJets        = (UseStoredGen ? MGen.GenJet : ClusterJets(Particles));
+         vector<FourVector> GenJets        = (UseStoredGen ? MGen.GenJet : ClusterJets(Particles)); // Either use stored GenJets or recluster on the fly with particles collected above
          vector<FourVector> ChargedGenJets = ClusterJets(ChargedParticles);
          
          // Gather MET
@@ -297,6 +302,8 @@ int main(int argc, char *argv[])
          vector<FourVector> ReferenceObjects;
          vector<double> ReferenceDXY;
          vector<int> ReferenceSigns;
+
+         // Loop over all configurations
          for(int i = 0; i < N; i++)
          {
             FourVector Best(-1, 0, 0, 0);
@@ -305,6 +312,8 @@ int main(int argc, char *argv[])
 
             Configuration &C = Configurations[i];
 
+            // If the configuration corresponds to some type of particle, determine from the corresponding generator objects the highest pT object that satisfies the configured conditions.
+            // If the configuration corresponds to HT or MET, construct the quantity from the corresponding generator objects and thresholds
             if(C.ReferenceObject == "GenJet")
                Best = BestInRange(GenJets, C.AbsEtaMin, C.AbsEtaMax, -1);
             else if(C.ReferenceObject == "ChargedGenJet")
