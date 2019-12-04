@@ -24,6 +24,9 @@ using namespace std;
 #define QUAL_12_DXY1 -7
 #define QUAL_BARRELNONEENDCAP3 -8
 #define QUAL_QUALANDFLAG -9
+#define QUAL_BARRELNONEENDCAP5 -10
+#define QUAL_DXY1 -11
+#define QUAL_OVERLAP12 -12
 
 int BestIndexInRange(vector<FourVector> &List, double AbsEta, double PTMin);
 FourVector BestInRange(vector<FourVector> &List, double AbsEta, double PTMin);
@@ -42,4 +45,5 @@ double CalculateGenIsolation(FourVector &P, vector<FourVector> &Particles, doubl
 vector<FourVector> CleanUpTaus(vector<FourVector> &Taus, vector<FourVector> &Avoid, double DR = 0.3);
 FourVector GetVisTau(L1GenMessenger &MGen, int Index);
 FourVector GetVisTauAdhoc(L1GenMessenger &MGen, int Index);
+bool CheckLeptonicW(L1GenMessenger &MGen);
 

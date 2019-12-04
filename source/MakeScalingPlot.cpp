@@ -44,7 +44,6 @@ int main(int argc, char *argv[])
    bool DoTkMuonStub       = CL.GetBool("DoTkMuonStub", false);
    bool DoTkMuonStubS12    = CL.GetBool("DoTkMuonStubS12", false);
    bool DoEG               = CL.GetBool("DoEG", false);
-   bool DoEGExtended       = CL.GetBool("DoEGExtended", false);
    bool DoEGTrack          = CL.GetBool("DoEGTrack", false);
    bool DoElectron         = CL.GetBool("DoElectron", false);
    bool DoZElectron        = CL.GetBool("DoZElectron", false);
@@ -55,10 +54,14 @@ int main(int argc, char *argv[])
    bool DoPuppiJet         = CL.GetBool("DoPuppiJet", false);
    bool DoPuppiJetForMET   = CL.GetBool("DoPuppiJetForMET", false);
    bool DoPuppiJetMin25    = CL.GetBool("DoPuppiJetMin25", false);
+   bool DoPFPhase1Jet      = CL.GetBool("DoPFPhase1Jet", false);
    bool DoPuppiHT          = CL.GetBool("DoPuppiHT", false);
    bool DoPuppiMET         = CL.GetBool("DoPuppiMET", false);
+   bool DoPFPhase1HT       = CL.GetBool("DoPFPhase1HT", false);
    bool DoPFTau            = CL.GetBool("DoPFTau", false);
    bool DoPFIsoTau         = CL.GetBool("DoPFIsoTau", false);
+   bool DoHPSTau           = CL.GetBool("DoHPSTau", false);
+   bool DoHPSIsoTau        = CL.GetBool("DoHPSIsoTau", false);
    bool DoCaloJet          = CL.GetBool("DoCaloJet", false);
    bool DoCaloHT           = CL.GetBool("DoCaloHT", false);
    bool DoTrackerJet       = CL.GetBool("DoTrackerJet", false);
@@ -79,9 +82,9 @@ int main(int argc, char *argv[])
 
    PdfFile.SetAutomaticHomeButton();
    
-   vector<double> EGThresholds = {12, 15, 20, 25, 30};
-   vector<double> TkMuonThresholds = {3, 5, 12, 15, 20, 25, 30};
-   vector<double> MuonThresholds = {12, 15, 20, 25, 30};
+   vector<double> EGThresholds = {7, 9, 12, 14, 15, 17, 20, 22, 25, 27, 30, 40, 50};
+   vector<double> TkMuonThresholds = {3, 4, 5, 7, 9, 10, 12, 14, 15, 17, 20, 22, 25, 27, 30};
+   vector<double> MuonThresholds = {7, 9, 10, 12, 14, 15, 17, 20, 22, 25, 27, 30};
    vector<double> TauThresholds = {20, 25, 27, 30, 40, 50, 60, 70};
    vector<double> TauThresholds2 = {30, 40, 50, 60, 70};
    vector<double> JetThresholds = {15, 20, 25, 30, 40, 50, 75, 100, 150, 200};
@@ -95,6 +98,7 @@ int main(int argc, char *argv[])
    vector<double> TkMHTThresholds = {20, 30, 40, 50, 60, 70, 100, 150};
    vector<double> MHTThresholds = {70, 80, 90, 100, 125, 150, 175};
    vector<double> LowMETThresholds = {20, 30, 40, 50, 60, 70};
+   vector<double> TkMETThresholds = {10, 20, 30, 40, 50, 60, 70};
    vector<double> METThresholds = {70, 80, 90, 100, 125, 150, 175};
 
    if(DoSTAMuon == true)
@@ -131,8 +135,16 @@ int main(int argc, char *argv[])
          Prefix + "TkMuonE", "PT", TYPE_SMOOTH_TIGHT);
    }
    if(DoTkMuonStub == true)
-      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TkMuonStubIso", MuonThresholds, Reference,
-         Prefix + "TkMuonStubIso", "PT", TYPE_SMOOTH_TIGHT);
+   {
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TkMuonStubIsoB", MuonThresholds, Reference,
+         Prefix + "TkMuonStubB", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TkMuonStubIsoO", MuonThresholds, Reference,
+         Prefix + "TkMuonStubO", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TkMuonStubIsoE", MuonThresholds, Reference,
+         Prefix + "TkMuonStubE", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TkMuonStubIsoExtended", MuonThresholds, Reference,
+         Prefix + "TkMuonStubExtended", "PT", TYPE_SMOOTH_TIGHT);
+   }
    if(DoTkMuonStubS12 == true)
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "TkMuonStubS12Iso", MuonThresholds, Reference,
          Prefix + "TkMuonStubS12Iso", "PT", TYPE_SMOOTH_TIGHT);
@@ -144,19 +156,12 @@ int main(int argc, char *argv[])
          Prefix + "EGBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "EG", EGThresholds, Reference,
          Prefix + "EGEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
-   }
-   if(DoEGExtended == true)
-   {
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "EGExtendedIso", EGThresholds, Reference,
          Prefix + "EGExtended", "PT", TYPE_SMOOTH_TIGHT);
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "EGExtendedIso", EGThresholds, Reference,
          Prefix + "EGExtendedFit", "PT", TYPE_FITFIX2);
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "EGExtendedIso", EGThresholds, Reference,
          Prefix + "EGExtendedFit2", "PT", TYPE_FITFIX2, QUADRATIC);
-      ProcessFile(PdfFile, InputFileName, CurvesFileName, "EGExtendedIso", EGThresholds, Reference,
-         Prefix + "EGExtendedBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
-      ProcessFile(PdfFile, InputFileName, CurvesFileName, "EGExtendedIso", EGThresholds, Reference,
-         Prefix + "EGExtendedEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
    }
    if(DoEGTrack == true)
    {
@@ -168,10 +173,6 @@ int main(int argc, char *argv[])
          Prefix + "EGTrackIDEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "EGTrackIDExtendedIso", EGThresholds, Reference,
          Prefix + "EGTrackIDExtended", "PT", TYPE_SMOOTH_TIGHT);
-      ProcessFile(PdfFile, InputFileName, CurvesFileName, "EGTrackIDExtendedIso", EGThresholds, Reference,
-         Prefix + "EGTrackIDExtendedBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
-      ProcessFile(PdfFile, InputFileName, CurvesFileName, "EGTrackIDExtendedIso", EGThresholds, Reference,
-         Prefix + "EGTrackIDExtendedEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
    }
    if(DoElectron == true)
    {
@@ -243,6 +244,25 @@ int main(int argc, char *argv[])
          Prefix + "PuppiJet", "PT", TYPE_SMOOTH_TIGHT);
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "PuppiJetForward", PuppiJetThresholds, Reference,
          Prefix + "PuppiJetForward", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PuppiJet", PuppiJetThresholds, Reference,
+         Prefix + "PuppiJetBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PuppiJet", PuppiJetThresholds, Reference,
+         Prefix + "PuppiJetEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
+   }
+   if(DoPFPhase1Jet == true)
+   {
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFPhase1Jet", PuppiJetThresholds, Reference,
+         Prefix + "PFPhase1JetFitFix2", "PT", TYPE_FITFIX2);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFPhase1Jet", PuppiJetThresholds, Reference,
+         Prefix + "PFPhase1JetFitFix", "PT", TYPE_FITFIX);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFPhase1Jet", PuppiJetThresholds, Reference,
+         Prefix + "PFPhase1Jet", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFPhase1JetForward", PuppiJetThresholds, Reference,
+         Prefix + "PFPhase1JetForward", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFPhase1Jet", PuppiJetThresholds, Reference,
+         Prefix + "PFPhase1JetBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFPhase1Jet", PuppiJetThresholds, Reference,
+         Prefix + "PFPhase1JetEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
    }
    if(DoPuppiJetForMET == true)
    {
@@ -275,8 +295,11 @@ int main(int argc, char *argv[])
          Prefix + "PuppiJetMin25Forward", "PT", TYPE_SMOOTH_TIGHT);
    }
    if(DoPuppiHT == true)
-      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PuppiHT30", HTThresholds, Reference,
-         Prefix + "PuppiHT30", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PuppiHT", HTThresholds, Reference,
+         Prefix + "PuppiHT", "PT", TYPE_SMOOTH_TIGHT);
+   if(DoPFPhase1HT == true)
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFPhase1HT", HTThresholds, Reference,
+         Prefix + "PFPhase1HT", "PT", TYPE_SMOOTH_TIGHT);
    if(DoPuppiMET == true)
    {
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "PuppiMET", METThresholds, Reference,
@@ -289,11 +312,41 @@ int main(int argc, char *argv[])
          Prefix + "PuppiMET", "PT", TYPE_FITFIX2);
    }
    if(DoPFTau == true)
-      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFTau", TauThresholds, Reference,
+   {
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFTauIso", TauThresholds, Reference,
          Prefix + "PFTau", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFTauIso", TauThresholds, Reference,
+         Prefix + "PFTauBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFTauIso", TauThresholds, Reference,
+         Prefix + "PFTauEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
+   }
    if(DoPFIsoTau == true)
+   {
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFIsoTau", TauThresholds, Reference,
          Prefix + "PFIsoTau", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFIsoTau", TauThresholds, Reference,
+         Prefix + "PFIsoTauBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "PFIsoTau", TauThresholds, Reference,
+         Prefix + "PFIsoTauEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
+   }
+   if(DoHPSTau == true)
+   {
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "HPSTauIso", TauThresholds, Reference,
+         Prefix + "HPSTau", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "HPSTauIso", TauThresholds, Reference,
+         Prefix + "HPSTauBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "HPSTauIso", TauThresholds, Reference,
+         Prefix + "HPSTauEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
+   }
+   if(DoHPSIsoTau == true)
+   {
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "HPSIsoTau", TauThresholds, Reference,
+         Prefix + "HPSIsoTau", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "HPSIsoTau", TauThresholds, Reference,
+         Prefix + "HPSIsoTauBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "HPSIsoTau", TauThresholds, Reference,
+         Prefix + "HPSIsoTauEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
+   }
    if(DoCaloJet == true)
    {
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "CaloJet", CaloJetThresholds, Reference,
@@ -311,17 +364,27 @@ int main(int argc, char *argv[])
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "CaloJetEndcap", CaloJetThresholds, Reference,
          Prefix + "CaloJetEndcapStringterpolate", "PT", TYPE_SMOOTH_TIGHT);
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "CaloJetFoward", CaloJetThresholds, Reference,
-         Prefix + "CaloJetFoward", "PT", TYPE_SMOOTH_TIGHT);
+         Prefix + "CaloJetForward", "PT", TYPE_FITFIX2);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "CaloJetFoward", CaloJetThresholds, Reference,
+         Prefix + "CaloJetForwardStringterpolate", "PT", TYPE_SMOOTH_TIGHT);
    }
-   // if(DoCaloHT == true)
-   //    ProcessFile(PdfFile, InputFileName, CurvesFileName, "", Thresholds, Reference,
-   //       "", "PT", TYPE_SMOOTH_TIGHT);
+   if(DoCaloHT == true)
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "CaloHT", HTThresholds, Reference,
+         Prefix + "CaloHT", "PT", TYPE_SMOOTH_TIGHT);
    if(DoTrackerJet == true)
    {
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerJet", TkJetThresholds, Reference,
          Prefix + "TrackerJet", "PT", TYPE_SMOOTH_TIGHT);
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerJet", TkJetThresholds, Reference,
+         Prefix + "TrackerJetBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerJet", TkJetThresholds, Reference,
+         Prefix + "TrackerJetEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerJet", TkJetThresholds, Reference,
          Prefix + "TrackerJetFit", "PT", TYPE_FITFIX);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerJet", TkJetThresholds, Reference,
+         Prefix + "TrackerJetBarrelFit", "PTEta15", TYPE_FITFIX);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerJet", TkJetThresholds, Reference,
+         Prefix + "TrackerJetEndcapFit", "PTEtaLarge", TYPE_FITFIX);
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerJetCharged", TkJetThresholds, Reference,
          Prefix + "TrackerJetCharged", "PT", TYPE_SMOOTH_TIGHT);
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerJetCharged", TkJetThresholds, Reference,
@@ -329,10 +392,10 @@ int main(int argc, char *argv[])
    }
    if(DoTrackerHT == true)
    {
-      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerHT5", TkHTThresholds, Reference,
-         Prefix + "TrackerHT5", "PT", TYPE_SMOOTH_TIGHT);
-      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerHTCharged5", TkHTThresholds, Reference,
-         Prefix + "TrackerHTCharged5", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerHT", TkHTThresholds, Reference,
+         Prefix + "TrackerHT", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerHTCharged", TkHTThresholds, Reference,
+         Prefix + "TrackerHTCharged", "PT", TYPE_SMOOTH_TIGHT);
    }
    if(DoTrackerMHT == true)
    {
@@ -349,29 +412,59 @@ int main(int argc, char *argv[])
    }
    if(DoTrackerMET == true)
    {
-      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerMET", METThresholds, Reference,
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerMET", TkMETThresholds, Reference,
          Prefix + "TrackerMET", "PT", TYPE_SMOOTH_TIGHT);
-      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerMETCharged", METThresholds, Reference,
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TrackerMETCharged", TkMETThresholds, Reference,
          Prefix + "TrackerMETCharged", "PT", TYPE_SMOOTH_TIGHT);
    }
    if(DoTkTau == true)
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "TkTau", TauThresholds, Reference,
          Prefix + "TkTau", "PT", TYPE_SMOOTH_TIGHT);
    if(DoCaloTkTau == true)
+   {
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "CaloTkTau", TauThresholds, Reference,
          Prefix + "CaloTkTau", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "CaloTkTau", TauThresholds, Reference,
+         Prefix + "CaloTkTauBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "CaloTkTau", TauThresholds, Reference,
+         Prefix + "CaloTkTauEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
+   }
    if(DoTkEGTau == true)
+   {
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "TkEGTau", TauThresholds, Reference,
          Prefix + "TkEGTau", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TkEGTau", TauThresholds, Reference,
+         Prefix + "TkEGTauBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "TkEGTau", TauThresholds, Reference,
+         Prefix + "TkEGTauEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
+   }
    if(DoNNTauLoose == true)
+   {
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "NNTauLooseIso", TauThresholds, Reference,
          Prefix + "NNTauLoose", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "NNTauLooseIso", TauThresholds, Reference,
+         Prefix + "NNTauLooseBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "NNTauLooseIso", TauThresholds, Reference,
+         Prefix + "NNTauLooseEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
+   }
    if(DoNNTauTight == true)
+   {
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "NNTauIso", TauThresholds2, Reference,
          Prefix + "NNTauTight", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "NNTauIso", TauThresholds2, Reference,
+         Prefix + "NNTauTightBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "NNTauIso", TauThresholds2, Reference,
+         Prefix + "NNTauTightEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
+   }
    if(DoCaloTau == true)
+   {
       ProcessFile(PdfFile, InputFileName, CurvesFileName, "CaloTauIso", TauThresholds, Reference,
          Prefix + "CaloTau", "PT", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "CaloTauIso", TauThresholds, Reference,
+         Prefix + "CaloTauBarrel", "PTEta15", TYPE_SMOOTH_TIGHT);
+      ProcessFile(PdfFile, InputFileName, CurvesFileName, "CaloTauIso", TauThresholds, Reference,
+         Prefix + "CaloTauEndcap", "PTEtaLarge", TYPE_SMOOTH_TIGHT);
+   }
    // if(Do == true)
    //    ProcessFile(PdfFile, InputFileName, CurvesFileName, "", Thresholds, Reference,
    //       "", "PT", TYPE_SMOOTH_TIGHT);

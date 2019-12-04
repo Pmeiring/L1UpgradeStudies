@@ -48,6 +48,8 @@ int BestIndexInRange(vector<GenericObject> &List, FourVector &Reference, double 
          continue;
       if(Qual == QUAL_12 && List[i].Qual < 12)
          continue;
+      if(Qual == QUAL_OVERLAP12 && List[i].Qual < 12 && List[i].P.GetAbsEta() >= 0.9 && List[i].P.GetAbsEta() <= 1.2)
+         continue;
       if(Qual == QUAL_BARRELODDENDCAP2 && List[i].Type == 0 && List[i].Qual % 2 == 0)
          continue;
       if(Qual == QUAL_BARRELODDENDCAP2 && List[i].Type == 1 && List[i].Qual < 2)
@@ -55,6 +57,8 @@ int BestIndexInRange(vector<GenericObject> &List, FourVector &Reference, double 
       if(Qual == QUAL_BARRELNONEENDCAP2 && List[i].Type == 1 && List[i].Qual < 2)
          continue;
       if(Qual == QUAL_BARRELNONEENDCAP3 && List[i].Type == 1 && List[i].Qual != 3)
+         continue;
+      if(Qual == QUAL_BARRELNONEENDCAP5 && List[i].Type == 1 && List[i].Qual != 5)
          continue;
       if(Qual == QUAL_USEFLAG && List[i].Flag == false)
          continue;
@@ -93,9 +97,13 @@ GenericObject BestInRange(vector<GenericObject> &List, FourVector &Reference, do
          continue;
       if(Qual == QUAL_12 && List[i].Qual < 12)
          continue;
+      if(Qual == QUAL_OVERLAP12 && List[i].Qual < 12 && List[i].P.GetAbsEta() >= 0.9 && List[i].P.GetAbsEta() <= 1.2)
+         continue;
       if(Qual == QUAL_12_DXY1 && List[i].Qual < 12)
          continue;
       if(Qual == QUAL_12_DXY1 && List[i].DXY < 1)
+         continue;
+      if(Qual == QUAL_DXY1 && List[i].DXY < 1)
          continue;
       if(Qual == QUAL_BARRELODDENDCAP2 && List[i].Type == 0 && List[i].Qual % 2 == 0)
          continue;
@@ -104,6 +112,8 @@ GenericObject BestInRange(vector<GenericObject> &List, FourVector &Reference, do
       if(Qual == QUAL_BARRELNONEENDCAP2 && List[i].Type == 1 && List[i].Qual < 2)
          continue;
       if(Qual == QUAL_BARRELNONEENDCAP3 && List[i].Type == 1 && List[i].Qual != 3)
+         continue;
+      if(Qual == QUAL_BARRELNONEENDCAP5 && List[i].Type == 1 && List[i].Qual != 5)
          continue;
       if(Qual == QUAL_USEFLAG && List[i].Flag == false)
          continue;
@@ -122,6 +132,8 @@ GenericObject BestInRange(vector<GenericObject> &List, FourVector &Reference, do
          if(Best.P.GetPT() < List[i].P.GetPT())
             Best = List[i];
    }
+   if(Best.P[0] < 0)
+      Best.Type = ((Reference.GetAbsEta() < 1.5) ? 0 : 1);
    return Best;
 }
 
@@ -315,5 +327,22 @@ FourVector GetVisTauAdhoc(L1GenMessenger &MGen, int Index)
       return FourVector(-1, 0, 0, 0);
    return P;
 }
+
+bool CheckLeptonicW(L1GenMessenger &MGen)
+{
+   bool Detected = false;
+   for(int i = 0; i < (int)MGen.GenID.size(); i++)
+   {
+      int GenID = abs(MGen.GenID[i]);
+      if(GenID < 11 || GenID > 16)
+         continue;
+
+      if(MGen.GenParent[i] == 24 || MGen.GenParent[i] == -24)
+         Detected = true;
+   }
+
+   return Detected;
+}
+
 
 

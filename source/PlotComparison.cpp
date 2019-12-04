@@ -21,7 +21,13 @@ string AutoName(string HMatch);
 
 int main(int argc, char *argv[])
 {
-   SetThesisStyle();
+   int DefaultColors[6] = {-1, -1, -1, -1, -1, -1};
+   DefaultColors[0] = TColor::GetColor("#E74C3C");
+   DefaultColors[1] = TColor::GetColor("#3498DB");
+   DefaultColors[2] = TColor::GetColor("#F1C40F");
+   DefaultColors[3] = TColor::GetColor("#2ECC71");
+   DefaultColors[4] = TColor::GetColor("#7F7F7F");
+   DefaultColors[5] = kMagenta;
 
    CommandLine CL(argc, argv);
 
@@ -35,7 +41,7 @@ int main(int argc, char *argv[])
    double XMax                 = CL.GetDouble("xmax");
    double YMin                 = CL.GetDouble("ymin", 0.0);
    double YMax                 = CL.GetDouble("ymax", 1.1);
-   vector<int> Colors          = CL.GetIntVector("color", vector<int>({kBlack, kRed, kGreen + 3, kYellow + 2, kMagenta, kCyan}));
+   vector<int> Colors          = CL.GetIntVector("color", vector<int>(DefaultColors, DefaultColors + 6));
    vector<double> Lines        = CL.GetDoubleVector("line", vector<double>({1.00}));
    bool Grid                   = CL.GetBool("grid", false);
    bool LogY                   = CL.GetBool("logy", false);
@@ -43,12 +49,26 @@ int main(int argc, char *argv[])
    double LegendY              = CL.GetDouble("legendy", 0.20);
    int ReBin                   = CL.GetInt("rebin", 1);
 
+   for(int i = 0; i < (int)Colors.size(); i++)
+   {
+      if(Colors[i] == -1)   Colors[i] = DefaultColors[0];
+      if(Colors[i] == -2)   Colors[i] = DefaultColors[1];
+      if(Colors[i] == -3)   Colors[i] = DefaultColors[2];
+      if(Colors[i] == -4)   Colors[i] = DefaultColors[3];
+      if(Colors[i] == -5)   Colors[i] = DefaultColors[4];
+      if(Colors[i] == -6)   Colors[i] = DefaultColors[5];
+   }
+
    int N = FileNames.size();
    std::cout<<"numberof filenames = "<<N<<std::endl;
 
    Assert(N == Labels.size(),       "Number of files != number of labels");
    Assert(N == Numerators.size(),   "Number of files != number of numberators");
    Assert(N == Denominators.size(), "Number of files != number of denominators");
+
+   bool DavignonStyle          = CL.GetBool("Davignon", false);
+   if(DavignonStyle == false)
+      SetThesisStyle();
 
    vector<TGraphAsymmErrors> Graphs(N);
    for(int i = 0; i < N; i++)
@@ -111,6 +131,12 @@ int main(int argc, char *argv[])
    }
 
    TCanvas Canvas;
+   if(DavignonStyle == true)
+   {
+      Canvas.SetCanvasSize(800, 800);
+      Canvas.SetLeftMargin(0.11);
+      Canvas.SetRightMargin(0.10);
+   }
 
    TH2D HWorld("HWorld", Title.c_str(), 100, XMin, XMax, 100, YMin, YMax);
    HWorld.SetStats(0);
@@ -137,11 +163,13 @@ int main(int argc, char *argv[])
    for(int i = 0; i < N; i++)
    {
       Graphs[i].SetMarkerColor(Colors[i]);
+      Graphs[i].SetMarkerStyle(20);
       Graphs[i].SetLineColor(Colors[i]);
+      Graphs[i].SetLineWidth(2);
       Graphs[i].Draw("pl");
    }
 
-   TLegend Legend(LegendX, LegendY, LegendX + 0.3, LegendY + 0.2);
+   TLegend Legend(LegendX, LegendY, LegendX + 0.3, LegendY + 0.06 * N);
    Legend.SetTextFont(42);
    Legend.SetTextSize(0.035);
    Legend.SetBorderSize(0);
@@ -149,6 +177,21 @@ int main(int argc, char *argv[])
    for(int i = 0; i < N; i++)
       Legend.AddEntry(&Graphs[i], Labels[i].c_str(), "pl");
    Legend.Draw();
+
+   if(DavignonStyle == true)
+   {
+      TLatex Latex;
+      Latex.SetNDC();
+
+      Latex.SetTextFont(42);
+      Latex.SetTextSize(0.03);
+      Latex.SetTextAlign(11);
+      Latex.DrawLatex(0.11, 0.91, "#scale[1.5]{CMS} Phase-2 Simulation");
+
+      Latex.SetTextSize(0.035);
+      Latex.SetTextAlign(31);
+      Latex.DrawLatex(0.90, 0.91, "14 TeV, 200 PU");
+   }
 
    Canvas.SetGridx(Grid);
    Canvas.SetGridy(Grid);

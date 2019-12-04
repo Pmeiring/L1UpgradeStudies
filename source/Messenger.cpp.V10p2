@@ -181,7 +181,7 @@ void L1ExtraUpgradeTreeMessenger::FillObject(vector<GenericObject> &V, int N,
       V.push_back(O);
    }
 }
-L1PhaseIITreeV10p4Messenger::L1PhaseIITreeV10p4Messenger(TFile &File, string TreeName)
+L1PhaseIITreeV10p2Messenger::L1PhaseIITreeV10p2Messenger(TFile &File, string TreeName)
 {
    Tree = (TTree *)File.Get(TreeName.c_str());
 
@@ -190,11 +190,11 @@ L1PhaseIITreeV10p4Messenger::L1PhaseIITreeV10p4Messenger(TFile &File, string Tre
    SetBranchAddress();
 }
 
-L1PhaseIITreeV10p4Messenger::~L1PhaseIITreeV10p4Messenger()
+L1PhaseIITreeV10p2Messenger::~L1PhaseIITreeV10p2Messenger()
 {
 }
    
-void L1PhaseIITreeV10p4Messenger::SetBranchAddress()
+void L1PhaseIITreeV10p2Messenger::SetBranchAddress()
 {
    if(Tree == NULL)
       return;
@@ -202,7 +202,7 @@ void L1PhaseIITreeV10p4Messenger::SetBranchAddress()
    Tree->SetBranchAddress("L1PhaseII", &L1PhaseII);
 }
 
-bool L1PhaseIITreeV10p4Messenger::GetEntry(int Entry)
+bool L1PhaseIITreeV10p2Messenger::GetEntry(int Entry)
 {
    if(Tree == NULL)
       return false;
@@ -495,19 +495,6 @@ bool L1PhaseIITreeV10p4Messenger::GetEntry(int Entry)
       &D0, &NNTauRegion, &P->nnTauPassLooseNN, &P->nnTauChg,
       &D0);
 
-   // NNPFTau: ChargedIso, PassLoosePF, PassTightPF, ID
-   vector<double> NNPFTauRegion = GetRegionFromEta(P->nnTauPFEta);
-   FillObject(NNPFTau, P->nNNTauPFs,
-      &P->nnTauPFEt, &P->nnTauPFEta, &P->nnTauPFPhi,
-      &D0, &P->nnTauPFFullIso, &D0, &D0,
-      &D0, &NNPFTauRegion, &P->nnTauPFPassTightNN, &P->nnTauPFChg,
-      &D0);
-   FillObject(NNPFTauLoose, P->nNNTauPFs,
-      &P->nnTauPFEt, &P->nnTauPFEta, &P->nnTauPFPhi,
-      &D0, &P->nnTauPFFullIso, &D0, &D0,
-      &D0, &NNPFTauRegion, &P->nnTauPFPassLooseNN, &P->nnTauPFChg,
-      &D0);
-
    // HPSTau: Type
    vector<double> HPSTauRegion = GetRegionFromEta(P->hpsTauEta);
    FillObject(HPSTau, P->nHPSTaus,
@@ -526,7 +513,7 @@ bool L1PhaseIITreeV10p4Messenger::GetEntry(int Entry)
    return true;
 }
    
-vector<double> L1PhaseIITreeV10p4Messenger::GetRegionFromEta(vector<double> &Eta)
+vector<double> L1PhaseIITreeV10p2Messenger::GetRegionFromEta(vector<double> &Eta)
 {
    vector<double> Result(Eta.size());
 
@@ -576,7 +563,6 @@ bool L1GenMessenger::GetEntry(int Entry)
    GenParent.clear();
    GenDaughter.clear();
    GenDxy.clear();
-   GenLxy.clear();
    GenJet.clear();
    GenMETTrue = FourVector(0, 0, 0, 0);
    GenMETCalo = FourVector(0, 0, 0, 0);
@@ -595,7 +581,6 @@ bool L1GenMessenger::GetEntry(int Entry)
          GenCharge.push_back(Generator->partCh[i]);
          GenParent.push_back(Generator->partParent[i]);
          GenDxy.push_back(Generator->partDxy[i]);
-         GenLxy.push_back(Generator->partLxy[i]);
          GenDaughter.push_back(vector<int>());
       }
 
